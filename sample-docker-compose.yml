@@ -1,0 +1,13 @@
+# Docker_compose sample file
+service:
+  influx_serial:
+    container_name: "arduino_to_influxdb"
+    image: theholypumpkin/serial_to_influxdb:latest
+    volumes:
+      - /local/path/to/additional/scripts:/container/path/:Z,U,ro
+      - /path/to/config.yml:/container/path/config.yml:Z,U,ro
+    devices:
+      - "/dev/tty1:/dev/tty1"
+      - "/dev/tty2:/dev/tty2"
+      - "/dev/tty3:/dev/tty3"
+    # Add logging dirver to compose and dockerfile and set uption at what level should be logged at

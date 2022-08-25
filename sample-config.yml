@@ -1,0 +1,11 @@
+
+devices:
+  device_name_1:
+    interface: /dev/tty1
+    baud: 9600
+    # following device specific values take precedence over global value and will overwrite them for the specific device
+    bucket: <my_device specific_bucket>           # the brackets are requiered
+    org: <my_device_specific_org>                 # the brackets are requiered
+    token: <my_device_specific_token>                   # the brackets are requiered
+    url: https://your_device_specific_influxdb_server.org
+    port: 12345 # when using the default 8086 port for influx db, this tag can be obmitted

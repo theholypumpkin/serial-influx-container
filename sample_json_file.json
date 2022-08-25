@@ -1,0 +1,17 @@
+{
+  "tag":{
+    "location":"living room",
+    "uuid":65535,
+    "name":"name"
+  },
+  "air_quality_measurment":{
+    "eCO2":412,
+    "TVOC": 5476,
+    "temperature": 25,
+    "humidity":55,
+    "dust":546
+  },
+  "plants_measurment":{
+    "soil humidity": 33
+  }
+}
