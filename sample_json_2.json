@@ -1,0 +1,15 @@
+{
+    "measurement": "test3",
+    "tags": {
+        "location":"living room",
+        "uuid":65535,
+        "name":"name"
+    },
+    "fields": {
+        "eCO2":460,
+        "TVOC": 6800,
+        "temperature": 28,
+        "humidity":63,
+        "dust":1600
+    }
+}
