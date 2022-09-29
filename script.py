@@ -30,7 +30,7 @@ for device_name in data["devices"]:
             with Serial(INTERFACE, BAUD) as serial:
                 line = serial.readline() # read until \n, wait indefinitly
                 serial.reset_input_buffer() # flush the input buffer 
-                #BUG still doesn't flish it proberly. I still get only the first read value, and way more readings
+                #BUG still doesn't flush it proberly. I still get only the first read value, and way more readings
                 # than are acually get send. Around one every second, not every 10 seconds
                 message = json.loads(line)
             # with open('sample_json_2.json', 'r') as line:
