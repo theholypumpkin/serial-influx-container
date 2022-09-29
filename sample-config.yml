@@ -1,11 +1,10 @@
 
 devices:
-  device_name_1:
-    interface: /dev/tty1
-    baud: 9600
-    # following device specific values take precedence over global value and will overwrite them for the specific device
-    bucket: <my_device specific_bucket>           # remove the brackets
-    org: <my_device_specific_org>                 # remove the brackets
-    token: <my_device_specific_token>                   # remove the brackets
-    url: https://your_device_specific_influxdb_server.org
-    port: 12345 # when using the default 8086 port for influx db, this tag can be obmitted
+  device_name_1:                #you can name this tag how you want like "when pigs fly"
+    interface: /dev/tty1        #your serial interface
+    baud: 9600                  #your baud rate
+    bucket: my_bucket           # your influxdb2 bucket
+    org: my_org                 # your influxdb2 org
+    token: my_token             # your token, choose wisely. A good token for this program CAN ONLY WRITE to the your bucket!         
+    url: https://your_influxdb_server.org
+    port: 12345                 # when using the default 8086 port for influx db, this tag can be obmitted

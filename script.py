@@ -8,12 +8,11 @@ from datetime import datetime
 from influxdb_client.client.write_api import SYNCHRONOUS
 from meteocalc import heat_index, Temp
 # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-# TODO RUN With python damon https://pypi.org/project/python-daemon/ to avoid infinite loop
-# TODO timer/schedule threading for each device
-# TODO Logging
-# TODO more potencial exeption handeling like file not found, key not found etc.
+logging.basicConfig(filename='log.log', encoding='utf-8', level=logging.DEBUG)
+logging.debug("opening config")
 with open('influxserial.yml', 'r') as config_file:
-    data = yaml.safe_load(config_file)
+        logging.debug("config loaded")
+        data = yaml.safe_load(config_file)
 
 # if multiple devices are specified
 for device_name in data["devices"]:
@@ -23,6 +22,7 @@ for device_name in data["devices"]:
     ORG = data["devices"][str(device_name)].get("org")
     TOKEN = data["devices"][str(device_name)].get("token")
     URL = data["devices"][str(device_name)].get("url")
+    logging.debug("config parsed")
     
     # Start the serial port
     while True:
@@ -30,11 +30,8 @@ for device_name in data["devices"]:
             with Serial(INTERFACE, BAUD) as serial:
                 line = serial.readline() # read until \n, wait indefinitly
                 serial.reset_input_buffer() # flush the input buffer 
-                #BUG still doesn't flush it proberly. I still get only the first read value, and way more readings
-                # than are acually get send. Around one every second, not every 10 seconds
                 message = json.loads(line)
-            # with open('sample_json_2.json', 'r') as line:
-            #    message = json.load(line)
+                logging.debug("new message arrived")
             
             temperature = Temp(message['fields']['temperature']) # default value for 2nd param is Celsius
             humidity = message['fields']['humidity']
@@ -42,16 +39,22 @@ for device_name in data["devices"]:
             heatindex = round(heatindex._convert_to('c'), 2) # works but uses private method
             message['fields']['heat index'] = heatindex
             message['time'] = str(datetime.utcnow())
-            # NOTE maybe I have to append a start AND end-time to avoid overwriting
-
-    
+            logging.debug("appended message")
     
             client = influxdb_client.InfluxDBClient(url=URL, token=TOKEN, org=ORG)
-            #BUG the old value in the db is getting overwritten
             with client.write_api(write_options=SYNCHRONOUS) as write_api:
                 write_api.write(bucket=BUCKET,org=ORG, record=message)
-            print(message)
+            logging.debug(message)
         except json.decoder.JSONDecodeError as e:
-            print('JSON Error')
+            logging.warning("JSON is improperly formated, can't be decoded")
+            logging.warning(e)
+        except influxdb_client.rest.ApiException as e:
+            logging.warning("influxdb api execption")
+            logging.warning(e)
+        except serial.serialutil.SerialException as e:
+            logging.warning("Can not open serial port")
+            logging.warning(e)
+        except Exeception as e:
+            logging.error(e)
 
 
