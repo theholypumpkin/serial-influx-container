@@ -28,8 +28,7 @@ sudo podman build -f influx_serial.dockerfile -t theholypumpkin/serial-influx .
 sudo podman run --name=serial-influx -d --device /dev/ttyACM0:/dev/ttyACM0 --group-add dialout --restart unless-stopped localhost/theholypumpkin/serial-influx:latest
 ```
 __Yes in this case we will build and run the container as root, which is considered unsafe.__ But because we have no exposed ports, we should be fine. If the system get compromised but you choose a good token, the attacker could only write junk data to your database.
-
-This should be it.
+If you do not like to run as root you can play around with premissions and for the device access and much more.
 
 # Potential issues:
 - you get repeated serial readings? This is an issue with pySerial and you USB-Controller or Serial-Chip. We flush the input buffer after every successful read but in some cases the buffer on the controller itself is not flushed.
